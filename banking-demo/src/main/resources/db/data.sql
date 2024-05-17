@@ -1,0 +1,56 @@
+INSERT INTO Customer (name, address, email, phone_number) VALUES
+('John Doe', '123 Main St, Anytown, USA', 'john.doe@example.com', '1234567890'),
+('Jane Smith', '456 Oak Ave, Anycity, USA', 'jane.smith@example.com', '9876543210'),
+('Michael Johnson', '789 Elm Rd, Anyville, USA', 'michael.johnson@example.com', '5551234567'),
+('Emily Williams', '321 Maple Blvd, Anytown, USA', 'emily.williams@example.com', '7778889999'),
+('David Brown', '456 Pine Dr, Anycity, USA', 'david.brown@example.com', '1112223333'),
+('Sarah Miller', '789 Birch Ln, Anyville, USA', 'sarah.miller@example.com', '4445556666'),
+('Matthew Davis', '123 Cedar St, Anytown, USA', 'matthew.davis@example.com', '2223334444'),
+('Jessica Wilson', '456 Walnut Ave, Anycity, USA', 'jessica.wilson@example.com', '8889990000'),
+('Christopher Martinez', '789 Oak Rd, Anyville, USA', 'christopher.martinez@example.com', '3334445555'),
+('Amanda Anderson', '321 Elm Blvd, Anytown, USA', 'amanda.anderson@example.com', '9990001111'),
+('Daniel Taylor', '456 Maple Dr, Anycity, USA', 'daniel.taylor@example.com', '6667778888'),
+('Melissa Thomas', '789 Pine Ln, Anyville, USA', 'melissa.thomas@example.com', '2226668888'),
+('Richard Lee', '123 Birch St, Anytown, USA', 'richard.lee@example.com', '1112223333'),
+('Laura Hernandez', '456 Cedar Ave, Anycity, USA', 'laura.hernandez@example.com', '4445556666'),
+('Kevin Clark', '789 Walnut Rd, Anyville, USA', 'kevin.clark@example.com', '7778889999'),
+('Ashley Young', '321 Pine Blvd, Anytown, USA', 'ashley.young@example.com', '3334445555'),
+('Brian Walker', '456 Elm Dr, Anycity, USA', 'brian.walker@example.com', '8889990000'),
+('Taylor White', '789 Maple Ln, Anyville, USA', 'taylor.white@example.com', '9990001111'),
+('Rachel Scott', '123 Oak St, Anytown, USA', 'rachel.scott@example.com', '6667778888'),
+('Justin Green', '456 Main Ave, Anycity, USA', 'justin.green@example.com', '2226668888'),
+('Emma Johnson', '789 Elm Rd, Anyville, USA', 'emma.johnson@example.com', '5551234567'),
+('Oliver Williams', '321 Maple Blvd, Anytown, USA', 'oliver.williams@example.com', '7778889999'),
+('Ethan Brown', '456 Pine Dr, Anycity, USA', 'ethan.brown@example.com', '1112223333'),
+('Amelia Miller', '789 Birch Ln, Anyville, USA', 'amelia.miller@example.com', '4445556666'),
+('Benjamin Davis', '123 Cedar St, Anytown, USA', 'benjamin.davis@example.com', '2223334444'),
+('Charlotte Wilson', '456 Walnut Ave, Anycity, USA', 'charlotte.wilson@example.com', '8889990000'),
+('Daniel Martinez', '789 Oak Rd, Anyville, USA', 'daniel.martinez@example.com', '3334445555'),
+('Harper Anderson', '321 Elm Blvd, Anytown, USA', 'harper.anderson@example.com', '9990001111'),
+('Sophia Taylor', '456 Maple Dr, Anycity, USA', 'sophia.taylor@example.com', '6667778888'),
+('Jack Thomas', '789 Pine Ln, Anyville, USA', 'jack.thomas@example.com', '2226668888'),
+('Jackson Lee', '123 Birch St, Anytown, USA', 'jackson.lee@example.com', '1112223333'),
+('Isabella Hernandez', '456 Cedar Ave, Anycity, USA', 'isabella.hernandez@example.com', '4445556666'),
+('James Clark', '789 Walnut Rd, Anyville, USA', 'james.clark@example.com', '7778889999'),
+('Mia Young', '321 Pine Blvd, Anytown, USA', 'mia.young@example.com', '3334445555'),
+('Evelyn Walker', '456 Elm Dr, Anycity, USA', 'evelyn.walker@example.com', '8889990000'),
+('William White', '789 Maple Ln, Anyville, USA', 'william.white@example.com', '9990001111'),
+('Abigail Scott', '123 Oak St, Anytown, USA', 'abigail.scott@example.com', '6667778888'),
+('Alexander Green', '456 Main Ave, Anycity, USA', 'alexander.green@example.com', '2226668888'),
+('Emily Hernandez', '789 Elm Rd, Anyville, USA', 'emily.hernandez@example.com', '5551234567'),
+('Ethan Martinez', '321 Maple Blvd, Anytown, USA', 'ethan.martinez@example.com', '7778889999');
+
+
+INSERT INTO Account (account_number, account_type, balance, past_month_turnover, customer_id)
+SELECT
+    CONCAT('ACC', LPAD(FLOOR(RAND() * 1000), 3, '0')),
+    CASE WHEN RAND() < 0.5 THEN 'DEBIT' ELSE 'CREDIT' END,
+    ROUND(RAND() * 10000, 2),
+    0,
+    CAST(FLOOR(RAND() * 40) + 1 AS INT)
+FROM
+    (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) as a,
+    (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) as b,
+    (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) as c,
+    (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) as d
+LIMIT 100;
