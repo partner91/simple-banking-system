@@ -11,13 +11,16 @@ import hr.hrsak.bankingdemo.services.AccountService;
 import hr.hrsak.bankingdemo.services.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -27,15 +30,23 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
     private final TransactionEventPublisher publisher;
+    private final Clock clock;
 
-    public TransactionServiceImpl(AccountService accountService, TransactionRepository transactionRepository, TransactionMapper transactionMapper,
-                                  TransactionEventPublisher publisher) {
+
+    public TransactionServiceImpl(AccountService accountService,
+                                  TransactionRepository transactionRepository,
+                                  TransactionMapper transactionMapper,
+                                  TransactionEventPublisher publisher,
+                                  Clock clock) {
         this.accountService = accountService;
         this.transactionRepository = transactionRepository;
         this.transactionMapper = transactionMapper;
         this.publisher = publisher;
+        this.clock = clock;
     }
 
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public Integer createTransaction(TransactionDTO transaction) {
         Transaction transactionEntity = transactionMapper.fromDTO(transaction);
@@ -46,6 +57,7 @@ public class TransactionServiceImpl implements TransactionService {
         BigDecimal transferAmount = transactionEntity.getAmount();
         BigDecimal senderInitialAmount = senderAccount.getBalance();
         BigDecimal receiverInitialAmount = recieverAccount.getBalance();
+
 
         recieverAccount.setBalance(receiverInitialAmount.add(transferAmount));
         senderAccount.setBalance(senderInitialAmount.subtract(transferAmount));
@@ -62,11 +74,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
-
     @Override
     public void updatePastMonthTurnover() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime pastMonthDate = now.minus(1,  ChronoUnit.MONTHS);
+        LocalDateTime now = LocalDateTime.now(clock);
+        LocalDateTime pastMonthDate = now.minus(1, ChronoUnit.MONTHS);
         accountService.findAll().parallelStream()
                 .forEach(account -> {
                     List<Transaction> incomeTransactionsForAnAccount = getIncomeTransactionsForAnAccount(account, pastMonthDate);
@@ -85,8 +96,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> getHistoricalTransactions(int customerId, String name, BigDecimal value) {
-        List<Transaction> byCustomerId = transactionRepository.findByCustomerId(customerId);
+    public List<Transaction> getHistoricalTransactions(Integer customerId, String name, BigDecimal value) {
+        List<Transaction> transactionsByCustomerId = transactionRepository.findByCustomerId(customerId);
+
+        if (transactionsByCustomerId.isEmpty()){
+            return Collections.emptyList();
+        }
 
         Predicate<Transaction> hasMatchingName = transaction ->
                 name == null || name.isBlank() ||
@@ -96,9 +111,9 @@ public class TransactionServiceImpl implements TransactionService {
         Predicate<Transaction> hasMatchingValue = transaction ->
                 value == null || transaction.getAmount().compareTo(value) == 0;
 
-        return byCustomerId.stream()
+        return transactionsByCustomerId.stream()
                 .filter(hasMatchingName.and(hasMatchingValue))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<Transaction> getIncomeTransactionsForAnAccount(Account account, LocalDateTime dateTime) {
@@ -109,7 +124,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findAllBySenderAccountIdForPastMonth(account, dateTime);
     }
 
-    private List<TransactionDetailsDTO> extractTransactionDetails(int transactionId, Account recieverAccount, Account senderAccount, BigDecimal receiverInitialAmount, BigDecimal senderInitialAmount, BigDecimal transferAmount) {
+    private List<TransactionDetailsDTO> extractTransactionDetails(Integer transactionId, Account recieverAccount, Account senderAccount, BigDecimal receiverInitialAmount, BigDecimal senderInitialAmount, BigDecimal transferAmount) {
         return List.of(
                 TransactionDetailsDTO.builder()
                         .transactionId(String.valueOf(transactionId))

@@ -25,8 +25,9 @@ public class TransactionController {
     }
 
     @GetMapping("/history/{customerId}")
-    public ResponseEntity<List<Transaction>> getTransactions(@PathVariable("customerId") int customerId, @RequestParam(required = false) String name,
-                                                                @RequestParam(required = false) BigDecimal value) {
+    public ResponseEntity<List<Transaction>> getTransactions(@PathVariable("customerId") Integer customerId,
+                                                             @RequestParam(required = false) String name,
+                                                             @RequestParam(required = false) BigDecimal value) {
         return ResponseEntity.ok(transactionService.getHistoricalTransactions(customerId, name, value));
 
     }

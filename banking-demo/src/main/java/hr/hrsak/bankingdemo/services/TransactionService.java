@@ -27,6 +27,6 @@ public interface TransactionService {
      * @param value - value
      * @return List of transactions
      */
-    List<Transaction> getHistoricalTransactions(int customerId, String name, BigDecimal value);
+    List<Transaction> getHistoricalTransactions(Integer customerId, String name, BigDecimal value);
 
 }

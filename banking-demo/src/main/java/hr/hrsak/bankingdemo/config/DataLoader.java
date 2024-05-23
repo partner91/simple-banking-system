@@ -41,20 +41,20 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         Resource resource = resourceLoader.getResource("classpath:data/transactions/transactions.csv");
-        try(CSVReader csvReader = new CSVReader(new FileReader(resource.getFile()));
-            ExecutorService executorService = Executors.newFixedThreadPool(10)) {
+        try (CSVReader csvReader = new CSVReader(new FileReader(resource.getFile()));
+             ExecutorService executorService = Executors.newFixedThreadPool(10)) {
             List<String[]> transactions = csvReader.readAll();
             int dataSize = transactions.size();
-            for (int i = 0; i < dataSize; i+=BATCH_SIZE) {
+            for (int i = 0; i < dataSize; i += BATCH_SIZE) {
                 final int start = i;
                 final int end = Math.min(dataSize, i + BATCH_SIZE);
                 executorService.submit(() -> {
-                   createNewTransaction(transactions.subList(start, end));
+                    createNewTransaction(transactions.subList(start, end));
                 });
             }
             executorService.shutdown();
         } catch (IOException | CsvException ex) {
-           log.error(ex.getMessage());
+            log.error(ex.getMessage());
         }
 
     }
@@ -71,7 +71,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private TransactionDTO convertStringArrayToTransactionDTO(String[] transaction) {
-        return  TransactionDTO.builder()
+        return TransactionDTO.builder()
                 .senderAccountId(Integer.parseInt(transaction[0]))
                 .receiverAccountId(Integer.parseInt(transaction[1]))
                 .amount(new BigDecimal(transaction[2]))

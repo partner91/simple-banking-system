@@ -18,9 +18,9 @@ import java.util.Date;
 public class TransactionDTO {
 
     @JsonProperty("sender_account_id")
-    private int senderAccountId;
+    private Integer senderAccountId;
     @JsonProperty("receiver_account_id")
-    private int receiverAccountId;
+    private Integer receiverAccountId;
     @JsonProperty("currency_id")
     private CurrencyEnum currencyId;
     private BigDecimal amount;

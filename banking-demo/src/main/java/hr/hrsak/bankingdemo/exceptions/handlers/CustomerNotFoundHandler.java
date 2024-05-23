@@ -13,8 +13,8 @@ public class CustomerNotFoundHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCustomerNotFoundException(CustomerNotFoundException ex) {
-      return new ResponseEntity<>(
-              new ErrorResponse(ex.getMessage()),HttpStatus.NOT_FOUND
-      );
+        return new ResponseEntity<>(
+                new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND
+        );
     }
 }

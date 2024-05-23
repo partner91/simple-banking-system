@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface AccountsRepository extends JpaRepository<Account, Integer> {
 
-    Optional<Account> findFirstByAccountId(int accountId);
+    Optional<Account> findFirstByAccountId(Integer accountId);
 
     List<Account> findAll();
 }

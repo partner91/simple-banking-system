@@ -20,7 +20,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Optional<Account> findFirstByAccountId(int accountId) {
+    public Optional<Account> findFirstByAccountId(Integer accountId) {
         return accountsRepository.findFirstByAccountId(accountId);
     }
 

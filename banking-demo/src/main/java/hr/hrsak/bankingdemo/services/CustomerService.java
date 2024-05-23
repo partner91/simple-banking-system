@@ -9,5 +9,5 @@ public interface CustomerService{
      * @param customerId customer id
      * @return CustomerDTO - customer data transfer object
      */
-    CustomerDTO findByCustomerId(int customerId);
+    CustomerDTO findByCustomerId(Integer customerId);
 }

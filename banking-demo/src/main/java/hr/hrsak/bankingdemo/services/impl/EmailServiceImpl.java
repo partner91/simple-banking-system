@@ -17,15 +17,15 @@ public class EmailServiceImpl implements EmailService {
     @Value("${email}")
     private String email;
     private final JavaMailSender mailSender;
-    private static final String TEMPLATE = """
+    private final String TEMPLATE = """
               Hello!
                         
               The transaction with ID: %s has been processed successfully,
               and the balance: %s has been %s from your account.
-         
+                     
               Old balance: %s
               New balance: %s
-            
+                        
               Regards,
               Your XYZ bank
             """;
@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendEmail(TransactionFinishedEvent transactionFinishedEvent) {
         TransactionDetailsDTO transaction = (TransactionDetailsDTO) transactionFinishedEvent.getSource();
-        SimpleMailMessage  mailMessage = new SimpleMailMessage();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(email);
         mailMessage.setTo(transaction.getEmail());
         mailMessage.setSubject("Transaction processed successfully");
@@ -48,8 +48,8 @@ public class EmailServiceImpl implements EmailService {
                 transaction.getOldBalance().toString(), transaction.getNewBalance().toString()));
         try {
             mailSender.send(mailMessage);
-        }   catch (Exception e) {
-           log.error(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class CustomerDTO {
-    private int customerId;
+    private Integer customerId;
     private String name;
     private List<Account> accounts;
 }

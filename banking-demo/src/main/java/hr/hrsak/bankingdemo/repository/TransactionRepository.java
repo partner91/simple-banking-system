@@ -16,9 +16,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT t FROM Transaction t WHERE (t.senderAccount.customer.customerId = :customerId OR t.receiverAccount.customer.customerId = :customerId)")
     List<Transaction> findByCustomerId(Integer customerId);
 
-    @Query("SELECT t FROM Transaction t WHERE t.receiverAccount = :receiverAccountId AND t.timeStamp >= :pastMonthDate")
-    List<Transaction> findAllByReceiverAccountIdForPastMonth(@Param("receiverAccountId") Account receiverAccountId, @Param("pastMonthDate") LocalDateTime pastMonthDate);
+    @Query("SELECT t FROM Transaction t WHERE t.receiverAccount = :receiverAccount AND t.timeStamp >= :pastMonthDate")
+    List<Transaction> findAllByReceiverAccountIdForPastMonth(@Param("receiverAccount") Account receiverAccount, @Param("pastMonthDate") LocalDateTime pastMonthDate);
 
-    @Query("SELECT t FROM Transaction t WHERE t.senderAccount = :senderAccountId AND t.timeStamp >= :pastMonthDate")
-    List<Transaction> findAllBySenderAccountIdForPastMonth(@Param("senderAccountId") Account senderAccountId, @Param("pastMonthDate") LocalDateTime pastMonthDate);
+    @Query("SELECT t FROM Transaction t WHERE t.senderAccount = :senderAccount AND t.timeStamp >= :pastMonthDate")
+    List<Transaction> findAllBySenderAccountIdForPastMonth(@Param("senderAccount") Account senderAccount, @Param("pastMonthDate") LocalDateTime pastMonthDate);
 }

@@ -13,7 +13,7 @@ public interface AccountService {
      * @return Optional of Account
      */
 
-    Optional<Account> findFirstByAccountId(int accountId);
+    Optional<Account> findFirstByAccountId(Integer accountId);
 
     /***
      * Method returns all accounts from DB

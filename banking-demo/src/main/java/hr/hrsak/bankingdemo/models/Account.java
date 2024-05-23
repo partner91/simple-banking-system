@@ -34,7 +34,7 @@ public class Account {
     private BigDecimal pastMonthTurnover;
 
     @ManyToOne
-    @JoinColumn(name="customerId")
+    @JoinColumn(name = "customerId")
     @JsonIgnore
     private Customer customer;
 

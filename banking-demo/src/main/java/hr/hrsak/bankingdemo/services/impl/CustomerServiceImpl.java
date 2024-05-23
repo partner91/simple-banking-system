@@ -21,16 +21,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final String errorMessage = "Customer with id: %d  not found";
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
 
     }
 
     @Override
-    public CustomerDTO findByCustomerId(int customerId) {
+    public CustomerDTO findByCustomerId(Integer customerId) {
         Optional<Customer> customer = customerRepository.findCustomerByCustomerId(customerId);
-        if(customer.isEmpty()) {
+        if (customer.isEmpty()) {
             log.error("Customer with id: {} not found", customerId);
             throw new CustomerNotFoundException(String.format(errorMessage, customerId));
         }
